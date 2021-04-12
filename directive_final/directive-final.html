@@ -89,7 +89,7 @@
             
             </table>
             <p class="text-end">共 NT$ {{orderPrice}}元</p>
-            <button class="btn btn-sm btn-secondary w-100">產生訂單</button>
+            <button class="btn btn-sm btn-secondary w-100" @click="createOrder()">產生訂單</button>
           </div>
         </div>
       </div>
@@ -110,23 +110,23 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">珍珠鮮奶茶<br>
-              <small class="text-muted fw-normal">備註：阿姨，我不想努力了</small>
+          <tr v-for="item in checkOutorder.order"> 
+            <th scope="row">{{item.name}}<br>
+              <small class="text-muted fw-normal">{{item.notice}}</small>
             </th>
-            <td>正常冰</td>
-            <td>全糖</td>
-            <td>椰果</td>
-            <td>70</td>
-            <td>1</td>
-            <td class="text-end">70</td>
+            <td>{{item.ice}}</td>
+            <td>{{item.sugar}}</td>
+            <td>{{item.toppings}}</td>
+            <td>{{item.totalMany}}</td>
+            <td>{{item.quantity}}</td>
+            <td class="text-end">{{item.totalMany}}</td>
           </tr>
         </tbody>
       </table>
-      <p class="mt-3 mb-1">訂單成立時間：2021-01-12 03:37:01</p>
-      <p class="mb-1">餐點數： 1</p>
+      <p class="mt-3 mb-1">訂單成立時間：{{this.checkOutorder.time}}</p>
+      <p class="mb-1">餐點數：{{this.checkOutorder.order.length}}</p>
       <p class="mb-1">付款狀態：未付款</p>
-      <p class="text-end mt-auto">共 NT$ 元</p>
+      <p class="text-end mt-auto">共 NT$ {{this.checkOutorder.checkoutprice}}元</p>
     </div>
   </div>
 </div>
@@ -137,7 +137,11 @@ const App = {
     return {
       selectProduct:{},
       buyItem:[],
-      order:[],
+      checkOutorder:{
+        time:'',
+        order:[],
+        checkoutprice:0
+      },
       iceType: ['正常冰', '少冰', '微冰', '去冰', '熱'],
       sugarType: ['全糖', '七分', '半糖', '三分', '無糖'],
       toppingsType: ['珍珠', '粉條', '小粉圓', '椰果', '芋頭'],
@@ -281,7 +285,10 @@ const App = {
       this.reset();
     },
     createOrder(){
-      this.order
+      const time=new Date().toISOString().split('T');
+      this.checkOutorder.time=`${time[0]}-${time[1].split('.')[0]}`;
+      this.checkOutorder.order=this.buyItem;
+      this.checkOutorder.checkoutprice=this.orderPrice;
     }
 }
 }
